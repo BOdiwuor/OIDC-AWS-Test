@@ -1,0 +1,28 @@
+name: OIDC AWS Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::385569634888:role/GitHubOIDCRole
+          aws-region: us-east-1
+
+      - name: Test AWS access
+        run: aws sts get-caller-identity
+
